@@ -3,8 +3,11 @@ package dataStructure;
 import model.Record;
 
 public class DictionaryPair<E> {
+    // -------------- field ----------------
+
     private E key;
     private Record<E> value;
+    // ------------ constructor --------------
 
     public DictionaryPair(E key, Record<E> value) {
         this.key = key;

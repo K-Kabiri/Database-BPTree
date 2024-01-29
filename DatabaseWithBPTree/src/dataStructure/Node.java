@@ -1,9 +1,13 @@
 package dataStructure;
 
 public class Node<E> {
+    // -------------- field ---------------
     private InternalNode<E> parent;
 
-    public Node() {}
+    // ------------ constructor --------------
+
+    public Node() {
+    }
 
     // ----------- getter & setter -------------
 

@@ -138,7 +138,7 @@ public class InternalNode<E> extends Node<E> {
 
     /*
     - This method uses in delete operation .
-    ( if the internalNode can be merged with if it has the minimum degree of children )
+    (the internalNode can be merged with if it has the minimum degree of children )
      */
     public boolean isMergeable() {
         return this.degree == this.minDegree;
