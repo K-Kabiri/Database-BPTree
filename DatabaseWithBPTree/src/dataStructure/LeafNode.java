@@ -18,7 +18,7 @@ public class LeafNode<E> extends Node<E> {
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
         this.dictionary = new DictionaryPair[m];
         this.numPairs = 0;
-        // this.insert(dp);
+        this.insert(dp);
     }
 
     public LeafNode(int m, DictionaryPair<E>[] dps, InternalNode<E> parent) {
