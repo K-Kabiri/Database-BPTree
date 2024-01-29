@@ -6,9 +6,9 @@ public class Record<E> {
     private E key;
     private ArrayList<Cell> columns;
 
-    public Record(E key, ArrayList<Cell> columns) {
+    public Record(E key) {
         this.key = key;
-        this.columns = columns;
+        this.columns = new ArrayList<>();
     }
 
     // ----------- getter & setter -------------

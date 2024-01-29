@@ -1,5 +1,6 @@
 package dataStructure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -214,7 +215,7 @@ public class BPTree<E extends Comparable<E>> {
 
             // add key to parent
             parent.getKeys()[parent.getDegree() - 1] = newParentKey;
-            Arrays.sort(parent.getKeys(), 0, parent.getDegree());
+            Arrays.sort(parent.getKeys(), 0, parent.getDegree(), EComparator);
 
             // set up pointer to new sibling
             int pointerIndex = parent.findIndexOfPointer(internalNode) + 1;
@@ -273,6 +274,18 @@ public class BPTree<E extends Comparable<E>> {
         }
         return -1;
     }
+
+    //********************************************
+    /*
+       This method performs a standard binary search on a sorted
+       DictionaryPair[].
+       (returns the index of the dictionary pair with target key if found. Otherwise, returns a negative value)
+     */
+    private int binarySearch(DictionaryPair<E>[] dps, int numPairs, E key) {
+
+        return Arrays.binarySearch(dps, 0, numPairs, new DictionaryPair<E>(key, new Record<>(key)), dictionaryPairComparator);
+    }
+
 
     // ------------------------------- Insert ----------------------------------
     /*
@@ -358,5 +371,68 @@ public class BPTree<E extends Comparable<E>> {
                 }
             }
         }
+    }
+    // ------------------------------- Search ----------------------------------
+
+    /*
+       This method returns the value associated with the key within a dictionary pair that exists inside the B+ tree.
+       ( if B+ tree is empty or the key doesn't exist in it return null )
+     */
+
+    public Record<E> search(E key) {
+        // If B+ tree is completely empty return null
+        if (isEmpty()) {
+            return null;
+        }
+        // find leaf node that holds the dictionary key
+        LeafNode<E> ln = (this.root == null) ? this.firstLeaf : findLeafNode(key);
+
+        // perform binary search to find index of key within dictionary
+        DictionaryPair<E>[] dps = ln.getDictionary();
+        int index = binarySearch(dps, ln.getNumPairs(), key);
+
+        // if index negative, the key doesn't exist in B+ tree
+        if (index < 0) {
+            return null;
+        } else {
+            return dps[index].getValue();
+        }
+    }
+
+    /*
+      This method traverses the list of the B+ tree and records
+      all values whose associated keys are within the range specified by
+      lowerBound and upperBound.
+     */
+    public ArrayList<Record<E>> search(E lowerBound, E upperBound) {
+
+        // Instantiate Double array to hold values
+        ArrayList<Record<E>> values = new ArrayList<Record<E>>();
+
+        // Iterate through the list of leaves
+        LeafNode<E> currNode = this.firstLeaf;
+
+        while (currNode != null) {
+            // Iterate through the dictionary of each node
+            DictionaryPair<E>[] dps = currNode.getDictionary();
+
+            for (DictionaryPair<E> dp : dps) {
+				/* Stop searching the dictionary once a null value is encountered
+				   as this the indicates the end of non-null values */
+                if (dp == null) {
+                    break;
+                }
+                // include value if its key fits within the provided range
+                if (lowerBound.compareTo(dp.getKey()) <= 0 && dp.getKey().compareTo(upperBound) <= 0) {
+                    values.add(dp.getValue());
+                }
+            }
+			/*
+			   update the current node to be the right sibling
+			   (leaf traversal is from left to right)
+			   */
+            currNode = currNode.getRightSibling();
+        }
+        return values;
     }
 }
