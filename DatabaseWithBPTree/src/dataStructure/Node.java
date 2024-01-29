@@ -1,17 +1,17 @@
 package dataStructure;
 
-public class Node {
-    private InternalNode parent;
+public class Node<E> {
+    private InternalNode<E> parent;
 
-    public Node() {
-    }
+    public Node() {}
+
     // ----------- getter & setter -------------
 
-    public InternalNode getParent() {
+    public InternalNode<E> getParent() {
         return parent;
     }
 
-    public void setParent(InternalNode parent) {
+    public void setParent(InternalNode<E> parent) {
         this.parent = parent;
     }
 }
