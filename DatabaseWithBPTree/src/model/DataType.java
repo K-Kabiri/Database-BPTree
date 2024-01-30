@@ -1,5 +1,5 @@
 package model;
 
 public enum DataType {
-    Double , Integer , String , Boolean
+    Double , Integer , String , Boolean , Character
 }
