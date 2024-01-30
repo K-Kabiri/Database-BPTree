@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Record<E> {
     private E key;
-    private ArrayList<Cell> columns;
+    private ArrayList<Cell<?>> columns;
 
     public Record(E key) {
         this.key = key;
@@ -21,11 +21,11 @@ public class Record<E> {
         this.key = key;
     }
 
-    public ArrayList<Cell> getColumns() {
+    public ArrayList<Cell<?>> getColumns() {
         return columns;
     }
 
-    public void setColumns(ArrayList<Cell> columns) {
+    public void setColumns(ArrayList<Cell<?>> columns) {
         this.columns = columns;
     }
 }

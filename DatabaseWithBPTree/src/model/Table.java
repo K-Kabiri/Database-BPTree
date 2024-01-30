@@ -8,14 +8,15 @@ import java.util.HashMap;
 public class Table<E extends Comparable<E>> implements ITable<E> {
 
     // ---------------- field -----------------
-
+    private String tableTitle;
     private static int rowIndex = 0;
     private ArrayList<Record<E>> records;
-    private HashMap<String , BPTree> bpTrees;
+    private HashMap<String , BPTree<?>> bpTrees;
 
     // ------------ constructor --------------
 
-    public Table() {
+    public Table(String tableTitle) {
+        this.tableTitle = tableTitle;
         this.records = new ArrayList<>();
         this.bpTrees = new HashMap<>();
         this.createBPTreeWithIndex();
@@ -31,16 +32,23 @@ public class Table<E extends Comparable<E>> implements ITable<E> {
         this.records = records;
     }
 
-    public HashMap<String, BPTree> getBpTrees() {
+    public HashMap<String, BPTree<?>> getBpTrees() {
         return bpTrees;
     }
 
-    public void setBpTrees(HashMap<String, BPTree> bpTrees) {
+    public void setBpTrees(HashMap<String, BPTree<?>> bpTrees) {
         this.bpTrees = bpTrees;
     }
 
     public static int getRowIndex() {
         return rowIndex;
+    }
+    public String getTableTitle() {
+        return tableTitle;
+    }
+
+    public void setTableTitle(String tableTitle) {
+        this.tableTitle = tableTitle;
     }
 
     // -------------- methods ----------------
