@@ -2,30 +2,30 @@ package model;
 
 import java.util.ArrayList;
 
-public class Record<E> {
-    private E key;
-    private ArrayList<Cell<?>> columns;
+public class Record {
+    private int indexInTable;
+    private ArrayList<Cell> columns;
 
-    public Record(E key) {
-        this.key = key;
+    public Record(int indexInTable) {
+        this.indexInTable=indexInTable;
         this.columns = new ArrayList<>();
     }
 
     // ----------- getter & setter -------------
 
-    public E getKey() {
-        return key;
+    public int getIndexInTable() {
+        return indexInTable;
     }
 
-    public void setKey(E key) {
-        this.key = key;
+    public void setIndexInTable(int indexInTable) {
+        this.indexInTable = indexInTable;
     }
 
-    public ArrayList<Cell<?>> getColumns() {
+    public ArrayList<Cell> getColumns() {
         return columns;
     }
 
-    public void setColumns(ArrayList<Cell<?>> columns) {
+    public void setColumns(ArrayList<Cell> columns) {
         this.columns = columns;
     }
 }

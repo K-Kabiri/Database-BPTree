@@ -9,6 +9,7 @@ public class InternalNode<E> extends Node<E> {
     private InternalNode<E> rightSibling;
     private E[] keys;
     private Node<E>[] childPointers;
+    BPTree<E> bpTree=new BPTree<>();
 
     // ------------ constructor --------------
 
@@ -23,7 +24,7 @@ public class InternalNode<E> extends Node<E> {
     public InternalNode(int m, E[] keys, Node<E>[] pointers) {
         this.maxDegree = m;
         this.minDegree = (int) Math.ceil(m / 2.0);
-        //this.degree = BPlusTree.linearNullSearch(pointers);
+        this.degree = bpTree.linearNullSearch(pointers);
         this.keys = keys;
         this.childPointers = pointers;
     }

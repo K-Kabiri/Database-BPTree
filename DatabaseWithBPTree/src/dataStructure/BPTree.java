@@ -6,39 +6,32 @@ import java.util.Comparator;
 
 import model.Record;
 
-public class BPTree<E extends Comparable<E>> {
+public class BPTree<E> {
 
     // -------------- field ----------------
     private int max;
     private InternalNode<E> root;
     private LeafNode<E> firstLeaf;
-    private final Comparator<E> EComparator = new Comparator<E>() {
-        @Override
-        public int compare(E o1, E o2) {
-            return o1.compareTo(o2);
-        }
-    };
-    private final Comparator<DictionaryPair<E>> dictionaryPairComparator = new Comparator<DictionaryPair<E>>() {
-        @Override
-        public int compare(DictionaryPair<E> o1, DictionaryPair<E> o2) {
-            if (o1 == null && o2 == null) {
-                return 0;
-            }
-            if (o1 == null) {
-                return 1;
-            }
-            if (o2 == null) {
-                return -1;
-            }
-            return o1.getKey().compareTo(o2.getKey());
-        }
-    };
+    private  Comparator<E> EComparator;
+    private Comparator<DictionaryPair<E>> dictionaryPairComparator;
 
     // ------------ constructor --------------
-    public BPTree(int max, InternalNode<E> root, LeafNode<E> firstLeaf) {
+    public BPTree(int max, InternalNode<E> root, LeafNode<E> firstLeaf,Comparator<E> EComparator,Comparator<DictionaryPair<E>> comparator) {
         this.max = max;
         this.root = root;
         this.firstLeaf = firstLeaf;
+        this.EComparator=EComparator;
+        this.dictionaryPairComparator=comparator;
+    }
+
+    public BPTree() {
+    }
+
+    protected int compare(E o1, E o2){
+        return EComparator.compare(o1,o2);
+    }
+    protected int compare(DictionaryPair<E> d1,DictionaryPair<E> d2){
+        return EComparator.compare(d1.getKey(),d2.getKey());
     }
 
     // ----------- getter & setter -------------
@@ -262,6 +255,17 @@ public class BPTree<E extends Comparable<E>> {
         return halfPointers;
     }
 
+     /*
+        This method performs a standard linear search on a sorted DictionaryPair[]
+         (returns the index of the first null entry found otherwise returns -1)
+     */
+    public int linearNullSearch(DictionaryPair<E>[] dps) {
+        for (int i = 0; i <  dps.length; i++) {
+            if (dps[i] == null) { return i; }
+        }
+        return -1;
+    }
+
     /*
      linear search on a list of Node[] pointers
      ( returns the index of the first null entry found otherwise returns -1 )
@@ -283,7 +287,7 @@ public class BPTree<E extends Comparable<E>> {
      */
     private int binarySearch(DictionaryPair<E>[] dps, int numPairs, E key) {
 
-        return Arrays.binarySearch(dps, 0, numPairs, new DictionaryPair<E>(key, new Record<>(key)), dictionaryPairComparator);
+        return Arrays.binarySearch(dps, 0, numPairs, new DictionaryPair<E>(key, new Record(-1)), dictionaryPairComparator);
     }
     //********************************************
 
@@ -398,7 +402,7 @@ public class BPTree<E extends Comparable<E>> {
     /*
     - This method inserts a dictionary pair into the B+ tree.
      */
-    public void insert(E key, Record<E> value) {
+    public void insert(E key, Record value) {
 
         // root is null
         if (isEmpty()) {
@@ -486,7 +490,7 @@ public class BPTree<E extends Comparable<E>> {
        ( if B+ tree is empty or the key doesn't exist in it returns null )
      */
 
-    public Record<E> search(E key) {
+    public Record search(E key) {
         // If B+ tree is completely empty return null
         if (isEmpty()) {
             return null;
@@ -511,10 +515,10 @@ public class BPTree<E extends Comparable<E>> {
       all values whose associated keys are within the range specified by
       lowerBound and upperBound.
      */
-    public ArrayList<Record<E>> search(E lowerBound, E upperBound) {
+    public ArrayList<Record> search(E lowerBound, E upperBound) {
 
         // Instantiate Double array to hold values
-        ArrayList<Record<E>> values = new ArrayList<Record<E>>();
+        ArrayList<Record> values = new ArrayList<Record>();
 
         // Iterate through the list of leaves
         LeafNode<E> currNode = this.firstLeaf;
@@ -530,7 +534,7 @@ public class BPTree<E extends Comparable<E>> {
                     break;
                 }
                 // include value if its key fits within the provided range
-                if (lowerBound.compareTo(dp.getKey()) <= 0 && dp.getKey().compareTo(upperBound) <= 0) {
+                if (compare(lowerBound,dp.getKey()) <= 0 && compare(dp.getKey(),upperBound) <= 0) {
                     values.add(dp.getValue());
                 }
             }

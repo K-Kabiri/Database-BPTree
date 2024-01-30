@@ -6,10 +6,10 @@ public class DictionaryPair<E> {
     // -------------- field ----------------
 
     private E key;
-    private Record<E> value;
+    private Record value;
     // ------------ constructor --------------
 
-    public DictionaryPair(E key, Record<E> value) {
+    public DictionaryPair(E key, Record value) {
         this.key = key;
         this.value = value;
     }
@@ -23,11 +23,11 @@ public class DictionaryPair<E> {
         this.key = key;
     }
 
-    public Record<E> getValue() {
+    public Record getValue() {
         return value;
     }
 
-    public void setValue(Record<E> value) {
+    public void setValue(Record value) {
         this.value = value;
     }
 }

@@ -10,6 +10,7 @@ public class LeafNode<E> extends Node<E> {
     private LeafNode<E> leftSibling;
     private LeafNode<E> rightSibling;
     private DictionaryPair<E>[] dictionary;
+    BPTree<E> bpTree=new BPTree<>();
 
     // ------------ constructor --------------
 
@@ -25,7 +26,7 @@ public class LeafNode<E> extends Node<E> {
         this.maxNumPairs = m - 1;
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
         this.dictionary = dps;
-        // this.numPairs = BPlusTree.linearNullSearch(dps);
+         this.numPairs = bpTree.linearNullSearch(dps);
         this.setParent(parent);
     }
 
