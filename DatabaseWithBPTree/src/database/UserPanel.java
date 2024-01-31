@@ -7,8 +7,11 @@ import database.model.DataType;
 import database.model.Record;
 import database.model.Table;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Scanner;
 
 public class UserPanel {
@@ -236,6 +239,11 @@ public class UserPanel {
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("STRING"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
+            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("DATE"))) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() +  " ( dd/MM/yyyy ) ..." );
+                String date = sc.next();
+                cells.add(new Cell<>(firstRow.getDataType(), LocalDate.parse(date , formatter) , firstRow.getColumnName()));
             }
         }
         Record newRecord = new Record(currentTable.getRowIndex());
@@ -275,7 +283,7 @@ public class UserPanel {
         System.out.println("> Enter the value you look for...");
         String value = sc.next();
         ArrayList<Record> record = currentTable.searchByColName(colName, value, value);
-        System.out.println(printRecordArrayList(record));
+        System.out.println(printResultList(record));
     }
 
     private String printAllColName() {
@@ -298,13 +306,21 @@ public class UserPanel {
         System.out.println("> Enter the upper bound...");
         String upperBound = sc.next();
         ArrayList<Record> record = currentTable.searchByColName(colName, lowerBound, upperBound);
-        System.out.println(printRecordArrayList(record));
+        System.out.println(printResultList(record));
     }
 
     private String printRecordArrayList(ArrayList<Record> records) {
         StringBuilder sb = new StringBuilder();
         for (int i=1;i< records.size();i++) {
-            sb.append("         ").append(records.get(i).toString()).append("\n");
+            sb.append(records.get(i).toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private String printResultList(ArrayList<Record> records){
+        StringBuilder sb = new StringBuilder();
+        for(Record record : records){
+            sb.append("         ").append(record.toString()).append("\n");
         }
         return sb.toString();
     }
@@ -319,7 +335,7 @@ public class UserPanel {
                 if(currentTable.deleteByIndex(index))
                     System.out.println("Deleting operation has been done successfully !");
             } catch (NonExistentKey e) {
-                throw new RuntimeException(e.getMessage());
+                System.out.println(e.getMessage());
             }
         } catch (EmptyTree e) {
             System.out.println(e.getMessage());

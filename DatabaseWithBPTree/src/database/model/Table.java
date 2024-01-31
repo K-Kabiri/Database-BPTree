@@ -5,6 +5,8 @@ import dataStructure.DictionaryPair;
 import exception.*;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Table {
@@ -121,7 +123,7 @@ public class Table {
      */
     public void creatBPTreeWithKey() {
         if (keyDataType == DataType.INTEGER) {
-            BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
+            BPTree<Integer> bpTree = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
                 @Override
                 public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
                     if (o1 == null && o2 == null) { return 0; }
@@ -130,10 +132,10 @@ public class Table {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
-            this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
+            this.mapBPTrees.put(keyColumnName, bpTree);
         } else if (keyDataType == DataType.DOUBLE) {
 
-            BPTree<Double> bpTreeByIndex = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
+            BPTree<Double> bpTree = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
                 @Override
                 public int compare(DictionaryPair<Double> o1, DictionaryPair<Double> o2) {
                     if (o1 == null && o2 == null) { return 0; }
@@ -142,10 +144,10 @@ public class Table {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
-            this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
+            this.mapBPTrees.put(keyColumnName, bpTree);
         } else if (keyDataType == DataType.CHARACTER) {
 
-            BPTree<Character> bpTreeByIndex = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
+            BPTree<Character> bpTree = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
                 @Override
                 public int compare(DictionaryPair<Character> o1, DictionaryPair<Character> o2) {
                     if (o1 == null && o2 == null) { return 0; }
@@ -154,10 +156,10 @@ public class Table {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
-            this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
+            this.mapBPTrees.put(keyColumnName, bpTree);
         } else if (keyDataType == DataType.BOOLEAN) {
 
-            BPTree<Boolean> bpTreeByIndex = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
+            BPTree<Boolean> bpTree = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
                 @Override
                 public int compare(DictionaryPair<Boolean> o1, DictionaryPair<Boolean> o2) {
                     if (o1 == null && o2 == null) { return 0; }
@@ -166,9 +168,9 @@ public class Table {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
-            this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
+            this.mapBPTrees.put(keyColumnName, bpTree);
         } else if (keyDataType == DataType.STRING) {
-            BPTree<String> bpTreeByIndex = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
+            BPTree<String> bpTree = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
                 @Override
                 public int compare(DictionaryPair<String> o1, DictionaryPair<String> o2) {
                     if (o1 == null && o2 == null) { return 0; }
@@ -177,7 +179,18 @@ public class Table {
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
-            this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
+            this.mapBPTrees.put(keyColumnName, bpTree);
+        } else if (keyDataType == DataType.DATE) {
+            BPTree<LocalDate> bpTree = new BPTree<>(5, null, null, LocalDate::compareTo, new Comparator<DictionaryPair<LocalDate>>() {
+                @Override
+                public int compare(DictionaryPair<LocalDate> o1, DictionaryPair<LocalDate> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
+                    return o1.getKey().compareTo(o2.getKey());
+                }
+            });
+            this.mapBPTrees.put(keyColumnName, bpTree);
         }
     }
 
@@ -299,6 +312,24 @@ public class Table {
                         bpTree.insert((String) cell.getValue(), records.get(i));
                 }
             }
+        } else if (dataType == DataType.DATE) {
+            BPTree<LocalDate> bpTree = new BPTree<>(5, null, null, LocalDate::compareTo, new Comparator<DictionaryPair<LocalDate>>() {
+                @Override
+                public int compare(DictionaryPair<LocalDate> o1, DictionaryPair<LocalDate> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
+                    return o1.getKey().compareTo(o2.getKey());
+                }
+            });
+            this.mapBPTrees.put(colName, bpTree);
+            // for insert all existed records in new BPTree
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
+                    if (Objects.equals(cell.getColumnName(), colName))
+                        bpTree.insert((LocalDate) cell.getValue(), records.get(i));
+                }
+            }
         }
     }
 
@@ -337,6 +368,10 @@ public class Table {
             }
             if (colDataType == DataType.BOOLEAN) {
                 return mapBPTrees.get(colName).search(Boolean.valueOf(lowerBound), Boolean.valueOf(upperBound));
+            }
+            if (colDataType == DataType.DATE){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                return mapBPTrees.get(colName).search(LocalDate.parse(lowerBound,formatter), LocalDate.parse(upperBound,formatter));
             }
         }
         /*
