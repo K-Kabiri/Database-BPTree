@@ -53,8 +53,13 @@ public class UserPanel {
 
                 // select existed table
                 case 2 -> {
-                    findSelectedTable();
-                    tableMenuManager();
+                    if (!tables.isEmpty()) {
+                        findSelectedTable();
+                        tableMenuManager();
+                    } else {
+                        System.out.println("No Table Exists!");
+                        System.out.println("* Creat a new table * \n");
+                    }
                 }
 
                 case 3 -> {
@@ -65,6 +70,7 @@ public class UserPanel {
     }
 
     public void tableMenuManager() {
+        System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
         menu.printTableMenu();
         int command;
 
@@ -74,55 +80,60 @@ public class UserPanel {
                 // insert new record
                 case 1 -> {
                     this.insertNewRecord();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
 
                 // search by row index
                 case 2 -> {
                     this.searchByIndex();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
 
                 // search by specific key
                 case 3 -> {
                     this.searchBySpecificKey();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
 
                 // search with input range
                 case 4 -> {
                     this.searchWithInputRange();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
 
                 // delete by index of row
                 case 5 -> {
                     this.deleteByIndex();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
 
                 // delete by other fields
                 case 6 -> {
                     this.deleteByOtherField();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
                 // update a record
                 case 7 -> {
                     this.updateRecord();
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
                 // print table
                 case 8 -> {
                     System.out.println("Fields : " + this.printAllColName());
                     System.out.println(printRecordArrayList(currentTable.getRecords()));
+                    System.out.println("     ~ "+currentTable.getTableTitle()+" ~");
                     menu.printTableMenu();
                 }
                 case 9 -> {
-                    currentTable=null;
+                    currentTable = null;
                     this.mainMenu();
-                }
-                default -> {
-                    menu.printTableMenu();
                 }
             }
         }
@@ -143,11 +154,20 @@ public class UserPanel {
         if (Objects.equals(hasKey, "YES")) {
             System.out.println("> Enter the type key which you want...");
             String keyType = sc.next();
-            keyType=keyType.toUpperCase();
-            createNewTableWithSelectedKey(keyType, tableTitle, numCol, Boolean.TRUE);
+            keyType = keyType.toUpperCase();
+            if (checkDataTape(keyType)) {
+                createNewTableWithSelectedKey(keyType, tableTitle, numCol, Boolean.TRUE);
+            } else {
+                System.out.println("Invalid Data Type!");
+                createTableManager();
+            }
+
         } else if (Objects.equals(hasKey, "NO")) {
             System.out.println("Ok! table with Integer index has been created for you...");
             createNewTableWithSelectedKey("INTEGER", tableTitle, numCol, Boolean.FALSE);
+        } else {
+            System.out.println("Invalid Input!");
+            createTableManager();
         }
     }
 
@@ -185,9 +205,14 @@ public class UserPanel {
             for (int i = 0; i < numCol - 1; i++) {
                 System.out.println("> Enter DataType and Name of column...");
                 String dataType = sc.next();
-                dataType=dataType.toUpperCase();
-                String colName = sc.next();
-                cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
+                dataType = dataType.toUpperCase();
+                if (checkDataTape(dataType)) {
+                    String colName = sc.next();
+                    cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
+                } else {
+                    System.out.println("Invalid Data Type!");
+                    createFirstRow(firstRow, keyType, numCol);
+                }
             }
             firstRow.setColumns(cells);
             currentTable.creatBPTreeWithKey();
@@ -199,12 +224,39 @@ public class UserPanel {
             for (int i = 0; i < numCol; i++) {
                 System.out.println("> Enter DataType and Name of column...");
                 String dataType = sc.next();
-                dataType=dataType.toUpperCase();
-                String colName = sc.next();
-                cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
+                dataType = dataType.toUpperCase();
+                if (checkDataTape(dataType)) {
+                    String colName = sc.next();
+                    cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
+                } else {
+                    System.out.println("Invalid Data Type!");
+                    createFirstRow(firstRow, keyType, numCol);
+                }
             }
             firstRow.setColumns(cells);
         }
+    }
+
+    /*
+        This method check data type of inputs
+         and returns false if it's invalid.
+     */
+    private boolean checkDataTape(String dataType) {
+        boolean check = false;
+        if (Objects.equals(dataType, "BOOLEAN"))
+            check = true;
+        else if (Objects.equals(dataType, "CHARACTER"))
+            check = true;
+        else if (Objects.equals(dataType, "INTEGER"))
+            check = true;
+        else if (Objects.equals(dataType, "DOUBLE"))
+            check = true;
+        else if (Objects.equals(dataType, "STRING"))
+            check = true;
+        else if (Objects.equals(dataType, "DATE"))
+            check = true;
+
+        return check;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -241,9 +293,9 @@ public class UserPanel {
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("DATE"))) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                System.out.println("> Enter the value of " + firstRow.getColumnName() +  " ( dd/MM/yyyy ) ..." );
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ( dd/MM/yyyy ) ...");
                 String date = sc.next();
-                cells.add(new Cell<>(firstRow.getDataType(), LocalDate.parse(date , formatter) , firstRow.getColumnName()));
+                cells.add(new Cell<>(firstRow.getDataType(), LocalDate.parse(date, formatter), firstRow.getColumnName()));
             }
         }
         Record newRecord = new Record(currentTable.getRowIndex());
@@ -260,16 +312,11 @@ public class UserPanel {
     private void searchByIndex() {
         System.out.println("> Enter the index ...");
         int index = sc.nextInt();
-        if (index<currentTable.getRowIndex()) {
+        if (index < currentTable.getRowIndex()) {
             Record record = currentTable.searchByIndex(index);
             System.out.println(record.toString());
-        }
-        else {
-            try {
-                throw new InvalidIndex();
-            } catch (InvalidIndex e) {
-                System.out.println(e.getMessage());
-            }
+        } else {
+            System.out.println(new InvalidIndex().getMessage());
         }
     }
 
@@ -311,80 +358,77 @@ public class UserPanel {
 
     private String printRecordArrayList(ArrayList<Record> records) {
         StringBuilder sb = new StringBuilder();
-        for (int i=1;i< records.size();i++) {
-            sb.append(records.get(i).toString()).append("\n");
+        for (int i = 1; i < records.size(); i++) {
+            sb.append("         ").append(records.get(i).toString()).append("\n");
         }
         return sb.toString();
     }
 
-    private String printResultList(ArrayList<Record> records){
+    private String printResultList(ArrayList<Record> records) {
         StringBuilder sb = new StringBuilder();
-        for(Record record : records){
-            sb.append("         ").append(record.toString()).append("\n");
+        for (Record record : records) {
+            sb.append(record.toString()).append("\n");
         }
         return sb.toString();
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    public void deleteByIndex(){
+    public void deleteByIndex() {
         System.out.println("> Enter the Index of row you wanna delete...");
         int index = sc.nextInt();
         try {
-            try {
-                if(currentTable.deleteByIndex(index))
-                    System.out.println("Deleting operation has been done successfully !");
-            } catch (NonExistentKey e) {
-                System.out.println(e.getMessage());
-            }
-        } catch (EmptyTree e) {
+            currentTable.deleteByIndex(index);
+            System.out.println("Deleting operation has been done successfully !");
+        } catch (DeleteException e) {
             System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(new InvalidIndex().getMessage());
         }
     }
 
-    public void deleteByOtherField(){
+    public void deleteByOtherField() {
         System.out.println("> Which field do you wanna deleted by?");
         System.out.println("Fields : " + this.printAllColName());
         String colName = sc.next();
         System.out.println("> Enter the value...");
         String value = sc.next();
         try {
-            try {
-                if(currentTable.deleteByField(colName , value ) )
-                    System.out.println("Deleting operation has been done successfully!");
-            } catch (NonExistentKey e) {
-                System.out.println(e.getMessage());
-            }
-        } catch (EmptyTree e) {
+            currentTable.deleteByField(colName, value);
+            System.out.println("Deleting operation has been done successfully!");
+        } catch (DeleteException e) {
             System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(new InvalidIndex().getMessage());
         }
     }
+
 
     //------------------------------------------------------------------------------------------------------------------
     /*
     This method uses for finding the table which user want
      */
-    public void findSelectedTable(){
+    public void findSelectedTable() {
         System.out.println("> Enter the name of table you wanna select...");
         String tableTitle = sc.next();
-        for(Table table : tables){
-            if(Objects.equals(table.getTableTitle(), tableTitle))
+        for (Table table : tables) {
+            if (Objects.equals(table.getTableTitle(), tableTitle))
                 currentTable = table;
         }
-        if (currentTable==null) {
+        if (currentTable == null) {
             System.out.println(new InvalidTableName().getMessage());
         }
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    private void updateRecord(){
+    private void updateRecord() {
         System.out.println("Fields : " + this.printAllColName());
         System.out.println(this.printRecordArrayList(currentTable.getRecords()));
         System.out.println("> Which index and field do you wanna update ?");
-        int index=sc.nextInt();
+        int index = sc.nextInt();
         String colName = sc.next();
         System.out.println("> Enter the new value...");
         String newValue = sc.next();
-        currentTable.updateRecordWithIndex(index,colName,newValue);
+        currentTable.updateRecordWithIndex(index, colName, newValue);
     }
 }
