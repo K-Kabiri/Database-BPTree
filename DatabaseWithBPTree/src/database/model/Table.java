@@ -2,8 +2,8 @@ package database.model;
 
 import dataStructure.BPTree;
 import dataStructure.DictionaryPair;
-import exception.EmptyTree;
-import exception.NonExistentKey;
+import exception.*;
+
 
 import java.util.*;
 
@@ -197,10 +197,10 @@ public class Table {
 
     // --------------------- Search --------------------------
 
-     /*
-    This method create a B+ tree with input colName as a key column
-    and put it in BPTrees map
-     */
+    /*
+   This method create a B+ tree with input colName as a key column
+   and put it in BPTrees map
+    */
     public void creatNewBPTree(String colName, DataType dataType) {
         if (dataType == DataType.INTEGER) {
             BPTree<Integer> bpTree = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
@@ -432,6 +432,16 @@ public class Table {
             for (Cell cell : records.get(i).getColumns()) {
                 if (Objects.equals(cell.getColumnName(), "Index"))
                     bpTreeByIndex.insert((Integer) cell.getValue(), records.get(i));
+            }
+        }
+    }
+
+    // --------------------- Update --------------------------
+    public void updateRecordWithIndex(int index,String colName,String newValue){
+        Record record=this.searchByIndex(index);
+        for (Cell cell:record.getColumns()){
+            if (Objects.equals(cell.getColumnName(), colName)){
+                cell.setValue(newValue);
             }
         }
     }

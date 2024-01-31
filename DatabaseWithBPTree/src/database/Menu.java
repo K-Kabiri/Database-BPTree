@@ -17,7 +17,9 @@ public class Menu {
                     [4] search with input range
                     [5] delete by index of row
                     [6] delete by other fields
-                    [7] BACK
+                    [7] update a record
+                    [8] print table
+                    [9] BACK
                     """);
     }
 }

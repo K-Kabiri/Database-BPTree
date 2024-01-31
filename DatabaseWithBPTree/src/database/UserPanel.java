@@ -103,7 +103,18 @@ public class UserPanel {
                     this.deleteByOtherField();
                     menu.printTableMenu();
                 }
+                // update a record
                 case 7 -> {
+                    this.updateRecord();
+                    menu.printTableMenu();
+                }
+                // print table
+                case 8 -> {
+                    System.out.println("Fields : " + this.printAllColName());
+                    System.out.println(printRecordArrayList(currentTable.getRecords()));
+                    menu.printTableMenu();
+                }
+                case 9 -> {
                     currentTable=null;
                     this.mainMenu();
                 }
@@ -133,7 +144,7 @@ public class UserPanel {
             createNewTableWithSelectedKey(keyType, tableTitle, numCol, Boolean.TRUE);
         } else if (Objects.equals(hasKey, "NO")) {
             System.out.println("Ok! table with Integer index has been created for you...");
-            createNewTableWithSelectedKey("Integer", tableTitle, numCol, Boolean.FALSE);
+            createNewTableWithSelectedKey("INTEGER", tableTitle, numCol, Boolean.FALSE);
         }
     }
 
@@ -292,8 +303,8 @@ public class UserPanel {
 
     private String printRecordArrayList(ArrayList<Record> records) {
         StringBuilder sb = new StringBuilder();
-        for (Record record : records) {
-            sb.append(record.toString()).append("\n");
+        for (int i=1;i< records.size();i++) {
+            sb.append("         ").append(records.get(i).toString()).append("\n");
         }
         return sb.toString();
     }
@@ -339,18 +350,25 @@ public class UserPanel {
      */
     public void findSelectedTable(){
         System.out.println("> Enter the name of table you wanna select...");
-        String tableTitle = sc.nextLine();
+        String tableTitle = sc.next();
         for(Table table : tables){
             if(Objects.equals(table.getTableTitle(), tableTitle))
                 currentTable = table;
         }
-        if (currentTable==null){
-            try {
-                throw new InvalidTableName();
-            } catch (InvalidTableName e) {
-                System.out.println(e.getMessage());
-            }
+        if (currentTable==null) {
+            System.out.println(new InvalidTableName().getMessage());
         }
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    private void updateRecord(){
+        System.out.println("Fields : " + this.printAllColName());
+        System.out.println(this.printRecordArrayList(currentTable.getRecords()));
+        System.out.println("> Which index and field do you wanna update ?");
+        int index=sc.nextInt();
+        String colName = sc.next();
+        System.out.println("> Enter the new value...");
+        String newValue = sc.next();
+        currentTable.updateRecordWithIndex(index,colName,newValue);
+    }
 }

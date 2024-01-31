@@ -34,7 +34,7 @@ public class Record {
         StringBuilder sb = new StringBuilder();
         for (Cell cell : this.columns) {
             sb.append(cell.getValue());
-            sb.append("   ");
+            sb.append("      ");
         }
         return sb.toString();
     }
