@@ -292,7 +292,7 @@ public class BPTree<E> {
      */
     private int binarySearch(DictionaryPair<E>[] dps, int numPairs, E key) {
 
-        return Arrays.binarySearch(dps, 0, numPairs, new DictionaryPair<E>(key, new Record(-1)), dictionaryPairComparator);
+        return Arrays.binarySearch(dps, 0, numPairs, new DictionaryPair<E>(key, new Record(-1) , EComparator), dictionaryPairComparator);
     }
     //********************************************
 
@@ -415,7 +415,7 @@ public class BPTree<E> {
             /* create leaf node as first node in B plus tree
               & set as first leaf node (can be used later for in-order leaf traversal)
              */
-            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value), this.EComparator, this.dictionaryPairComparator);
+            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value , EComparator), this.EComparator, this.dictionaryPairComparator);
         }
 
         // root is not null
@@ -424,10 +424,10 @@ public class BPTree<E> {
             LeafNode<E> leafNode = (this.root == null) ? this.firstLeaf : findLeafNode(key);
 
             // when insert into leaf node fails (this can happen in the case node becomes overfull)
-            if (!leafNode.insert(new DictionaryPair<E>(key, value))) {
+            if (!leafNode.insert(new DictionaryPair<E>(key, value , EComparator ))) {
 
                 // sort all the dictionary pairs with the included pair to be inserted
-                leafNode.getDictionary()[leafNode.getNumPairs()] = new DictionaryPair<E>(key, value);
+                leafNode.getDictionary()[leafNode.getNumPairs()] = new DictionaryPair<E>(key, value , EComparator);
                 leafNode.setNumPairs(leafNode.getNumPairs() + 1);
                 sortDictionary(leafNode.getDictionary());
 

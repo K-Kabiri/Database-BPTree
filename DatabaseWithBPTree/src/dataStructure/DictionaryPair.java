@@ -2,14 +2,17 @@ package dataStructure;
 
 import database.model.Record;
 
-public class DictionaryPair<E> {
-    // -------------- field ----------------
+import java.util.Comparator;
 
+public class DictionaryPair<E> implements Comparable<DictionaryPair<E>>{
+    // -------------- field ----------------
+    private Comparator<E> comparator;
     private E key;
     private Record value;
     // ------------ constructor --------------
 
-    public DictionaryPair(E key, Record value) {
+    public DictionaryPair(E key, Record value , Comparator<E> comparator) {
+        this.comparator = comparator;
         this.key = key;
         this.value = value;
     }
@@ -29,5 +32,10 @@ public class DictionaryPair<E> {
 
     public void setValue(Record value) {
         this.value = value;
+    }
+
+    @Override
+    public int compareTo(DictionaryPair<E> o) {
+        return comparator.compare(o.getKey() , this.getKey());
     }
 }
