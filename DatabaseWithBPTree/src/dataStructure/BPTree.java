@@ -12,26 +12,27 @@ public class BPTree<E> {
     private int max;
     private InternalNode<E> root;
     private LeafNode<E> firstLeaf;
-    private  Comparator<E> EComparator;
+    private Comparator<E> EComparator;
     private Comparator<DictionaryPair<E>> dictionaryPairComparator;
 
     // ------------ constructor --------------
-    public BPTree(int max, InternalNode<E> root, LeafNode<E> firstLeaf,Comparator<E> EComparator,Comparator<DictionaryPair<E>> comparator) {
+    public BPTree(int max, InternalNode<E> root, LeafNode<E> firstLeaf, Comparator<E> EComparator, Comparator<DictionaryPair<E>> comparator) {
         this.max = max;
         this.root = root;
         this.firstLeaf = firstLeaf;
-        this.EComparator=EComparator;
-        this.dictionaryPairComparator=comparator;
+        this.EComparator = EComparator;
+        this.dictionaryPairComparator = comparator;
     }
 
     public BPTree() {
     }
 
-    protected int compare(E o1, E o2){
-        return EComparator.compare(o1,o2);
+    protected int compare(E o1, E o2) {
+        return EComparator.compare(o1, o2);
     }
-    protected int compare(DictionaryPair<E> d1,DictionaryPair<E> d2){
-        return EComparator.compare(d1.getKey(),d2.getKey());
+
+    protected int compare(DictionaryPair<E> d1, DictionaryPair<E> d2) {
+        return EComparator.compare(d1.getKey(), d2.getKey());
     }
 
     // ----------- getter & setter -------------
@@ -255,13 +256,15 @@ public class BPTree<E> {
         return halfPointers;
     }
 
-     /*
-        This method performs a standard linear search on a sorted DictionaryPair[]
-         (returns the index of the first null entry found otherwise returns -1)
-     */
+    /*
+       This method performs a standard linear search on a sorted DictionaryPair[]
+        (returns the index of the first null entry found otherwise returns -1)
+    */
     public int linearNullSearch(DictionaryPair<E>[] dps) {
-        for (int i = 0; i <  dps.length; i++) {
-            if (dps[i] == null) { return i; }
+        for (int i = 0; i < dps.length; i++) {
+            if (dps[i] == null) {
+                return i;
+            }
         }
         return -1;
     }
@@ -391,9 +394,8 @@ public class BPTree<E> {
      */
     private void shiftDown(Node<E>[] pointers, int amount) {
         Node<E>[] newPointers = new Node[this.max + 1];
-        for (int i = amount; i < pointers.length; i++) {
-            newPointers[i - amount] = pointers[i];
-        }
+        if (pointers.length - amount >= 0)
+            System.arraycopy(pointers, amount, newPointers, amount - amount, pointers.length - amount);
         pointers = newPointers;
     }
 
@@ -409,7 +411,7 @@ public class BPTree<E> {
             /* create leaf node as first node in B plus tree
               & set as first leaf node (can be used later for in-order leaf traversal)
              */
-            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value));
+            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value) , this.EComparator ,this.dictionaryPairComparator );
         }
 
         // root is not null
@@ -534,7 +536,7 @@ public class BPTree<E> {
                     break;
                 }
                 // include value if its key fits within the provided range
-                if (compare(lowerBound,dp.getKey()) <= 0 && compare(dp.getKey(),upperBound) <= 0) {
+                if (compare(lowerBound, dp.getKey()) <= 0 && compare(dp.getKey(), upperBound) <= 0) {
                     values.add(dp.getValue());
                 }
             }

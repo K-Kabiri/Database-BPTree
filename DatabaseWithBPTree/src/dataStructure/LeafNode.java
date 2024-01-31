@@ -1,6 +1,7 @@
 package dataStructure;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class LeafNode<E> extends Node<E> {
     // -------------- field ----------------
@@ -10,23 +11,35 @@ public class LeafNode<E> extends Node<E> {
     private LeafNode<E> leftSibling;
     private LeafNode<E> rightSibling;
     private DictionaryPair<E>[] dictionary;
-    BPTree<E> bpTree=new BPTree<>();
+    BPTree<E> bpTree = new BPTree<>();
+
+    private Comparator<E> EComparator;
+    private Comparator<DictionaryPair<E>> dictionaryPairComparator;
 
     // ------------ constructor --------------
 
-    public LeafNode(int m, DictionaryPair<E> dp) {
+    public LeafNode(int m, DictionaryPair<E> dp , Comparator<E> Ecomparator , Comparator<DictionaryPair<E>> comparator) {
         this.maxNumPairs = m - 1;
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
         this.dictionary = new DictionaryPair[m];
         this.numPairs = 0;
+        this.EComparator = Ecomparator;
+        this.dictionaryPairComparator = comparator;
         this.insert(dp);
     }
 
+    protected int compare(E o1, E o2) {
+        return EComparator.compare(o1, o2);
+    }
+
+    protected int compare(DictionaryPair<E> d1, DictionaryPair<E> d2) {
+        return EComparator.compare(d1.getKey(), d2.getKey());
+    }
     public LeafNode(int m, DictionaryPair<E>[] dps, InternalNode<E> parent) {
         this.maxNumPairs = m - 1;
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
         this.dictionary = dps;
-         this.numPairs = bpTree.linearNullSearch(dps);
+        this.numPairs = bpTree.linearNullSearch(dps);
         this.setParent(parent);
     }
 
@@ -101,7 +114,7 @@ public class LeafNode<E> extends Node<E> {
         } else {
             this.dictionary[numPairs] = dp;
             numPairs++;
-            Arrays.sort(this.dictionary, 0, numPairs);
+            Arrays.sort(this.dictionary, 0, numPairs , dictionaryPairComparator);
             return true;
         }
     }

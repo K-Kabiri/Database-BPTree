@@ -28,4 +28,14 @@ public class Record {
     public void setColumns(ArrayList<Cell> columns) {
         this.columns = columns;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(Cell cell : this.columns){
+            sb.append(cell.getValue());
+            sb.append("   ");
+        }
+        return sb.toString();
+    }
 }

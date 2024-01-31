@@ -30,35 +30,57 @@ public class UserPanel {
     }
 
     // ---------------- Methods ----------------
+    public void mainMenu(){
+        int command;
+        do {
+            menu.printMainMenu();
+            command = sc.nextInt();
+
+            switch (command) {
+
+                // create new table
+                case 1 -> {
+                    createTableManager();
+                    tableMenuManager();
+                }
+
+                // select existed table
+                case 2 -> {
+
+                }
+            }
+        } while (command == 3);
+    }
 
     public void tableMenuManager() {
         menu.printTableMenu();
         int command;
-        do {
+
+        while(true){
             command = sc.nextInt();
             switch (command) {
                 // insert new record
                 case 1 -> {
-                    insertNewRecord();
-
+                    this.insertNewRecord();
+                    menu.printTableMenu();
                 }
 
                 // search by row index
                 case 2 -> {
-                    // code
-
+                    this.searchByIndex();
+                    menu.printTableMenu();
                 }
 
                 // search by specific key
                 case 3 -> {
-                    // code
-
+                    this.searchBySpecificKey();
+                    menu.printTableMenu();
                 }
 
                 // search with input range
                 case 4 -> {
-                    // code
-
+                    this.searchWithInputRange();
+                    menu.printTableMenu();
                 }
 
                 // delete by index of row
@@ -72,9 +94,16 @@ public class UserPanel {
                     // code
 
                 }
+
+                // delete by other fields
+                case 7 -> {
+                    this.mainMenu();
+                }
+                default -> {
+                    menu.printTableMenu();
+                }
             }
-            menu.printTableMenu();
-        } while (command == 7);
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -119,7 +148,6 @@ public class UserPanel {
             System.out.println("> Enter Name of key column...");
             String nameOfKeyCol = sc.next();
             currentTable.setKeyColumnName(nameOfKeyCol);
-            System.out.println(currentTable.getKeyColumnName());
             cells.add(new Cell<>(DataType.valueOf(keyType), null, nameOfKeyCol));
             for (int i = 0; i < numCol - 1; i++) {
                 System.out.println("> Enter DataType and Name of column...");
@@ -182,5 +210,51 @@ public class UserPanel {
         newRecord.setColumns(cells);
 
         currentTable.insertRecord(newRecord);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private void searchByIndex() {
+        System.out.println("> Enter the index ...");
+        int index = sc.nextInt();
+        Record record = currentTable.searchByIndex(index);
+        System.out.println(record.toString());
+    }
+
+    private void searchBySpecificKey() {
+        System.out.println("> Which field do you wanna search in?");
+        System.out.println("Fields : " + this.printAllColName());
+        String colName = sc.next();
+        System.out.println("> Enter the value you look for...");
+        String value = sc.next();
+        ArrayList<Record> record = currentTable.searchByColName(colName, value, value);
+        System.out.println(printRecordArrayList(record));
+    }
+
+    private String printAllColName() {
+        StringBuilder sb = new StringBuilder();
+        for (Cell cell : currentTable.getRecords().get(0).getColumns()) {
+            sb.append(cell.getColumnName() + "  ");
+        }
+        return sb.toString();
+    }
+
+    private void searchWithInputRange() {
+        System.out.println("> Which field do you wanna search in?");
+        System.out.println("Fields : " + this.printAllColName());
+        String colName = sc.next();
+        System.out.println("> Enter the lower bound...");
+        String lowerBound = sc.next();
+        System.out.println("> Enter the upper bound...");
+        String upperBound = sc.next();
+        ArrayList<Record> record = currentTable.searchByColName(colName, lowerBound, upperBound);
+        System.out.println(printRecordArrayList(record));
+    }
+    private String printRecordArrayList(ArrayList<Record> records){
+        StringBuilder sb = new StringBuilder();
+        for(Record record : records){
+            sb.append(record.toString()).append("\n");
+        }
+        return sb.toString();
     }
 }
