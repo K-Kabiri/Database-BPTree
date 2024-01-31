@@ -104,6 +104,9 @@ public class Table {
         BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
             @Override
             public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
+                if (o1 == null && o2 == null) { return 0; }
+                if (o1 == null) { return 1; }
+                if (o2 == null) { return -1; }
                 return o1.getKey().compareTo(o2.getKey());
             }
         });
@@ -111,14 +114,17 @@ public class Table {
     }
 
     /*
-           This method create a B+ tree with input key as a key column
-           and hold it in BPTrees map
-         */
+    This method create a B+ tree with input key as a key column
+    and hold it in BPTrees map
+     */
     public void creatBPTreeWithKey() {
         if (keyDataType == DataType.Integer) {
             BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
                 @Override
                 public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -128,6 +134,9 @@ public class Table {
             BPTree<Double> bpTreeByIndex = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
                 @Override
                 public int compare(DictionaryPair<Double> o1, DictionaryPair<Double> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -137,6 +146,9 @@ public class Table {
             BPTree<Character> bpTreeByIndex = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
                 @Override
                 public int compare(DictionaryPair<Character> o1, DictionaryPair<Character> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -146,6 +158,9 @@ public class Table {
             BPTree<Boolean> bpTreeByIndex = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
                 @Override
                 public int compare(DictionaryPair<Boolean> o1, DictionaryPair<Boolean> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -154,6 +169,9 @@ public class Table {
             BPTree<String> bpTreeByIndex = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
                 @Override
                 public int compare(DictionaryPair<String> o1, DictionaryPair<String> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -176,11 +194,19 @@ public class Table {
     }
 
     // --------------------- Search --------------------------
+
+     /*
+    This method create a B+ tree with input colName as a key column
+    and put it in BPTrees map
+     */
     public void creatNewBPTree(String colName, DataType dataType) {
         if (dataType == DataType.Integer) {
             BPTree<Integer> bpTree = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
                 @Override
                 public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -198,6 +224,9 @@ public class Table {
             BPTree<Double> bpTree = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
                 @Override
                 public int compare(DictionaryPair<Double> o1, DictionaryPair<Double> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -215,6 +244,9 @@ public class Table {
             BPTree<Character> bpTree = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
                 @Override
                 public int compare(DictionaryPair<Character> o1, DictionaryPair<Character> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -232,6 +264,9 @@ public class Table {
             BPTree<Boolean> bpTree = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
                 @Override
                 public int compare(DictionaryPair<Boolean> o1, DictionaryPair<Boolean> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -248,6 +283,9 @@ public class Table {
             BPTree<String> bpTree = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
                 @Override
                 public int compare(DictionaryPair<String> o1, DictionaryPair<String> o2) {
+                    if (o1 == null && o2 == null) { return 0; }
+                    if (o1 == null) { return 1; }
+                    if (o2 == null) { return -1; }
                     return o1.getKey().compareTo(o2.getKey());
                 }
             });
@@ -273,7 +311,9 @@ public class Table {
         return null;
     }
 
-    // use this method uses in searching by range & search in BP tree which name is colName
+    /*
+    use this method uses in searching by range & search in BP tree which name is colName
+     */
     public ArrayList<Record> searchByColName(String colName, String lowerBound, String upperBound) {
         /*
         if the BPTree based on col is existed in map we need to search in BPTree
@@ -307,18 +347,90 @@ public class Table {
         return null;
     }
 
-    // this method uses in searching by index
+    /*
+     This method uses in searching by index
+     */
     public Record searchByIndex(int index) {
         return mapBPTrees.get("Index").search(index);
     }
 
-//
-//    public Record deleteRecord(E key) {
-//        return null;
-//    }
-//
-//
-//    public ArrayList<Record> searchRecord(E key) {
-//        return null;
-//    }
+    // --------------------- Delete --------------------------
+    public Boolean deleteByIndex(int index){
+        // at first search this value by index
+        Record result = this.searchByIndex(index);
+        // then delete this record from all BPTree's
+        ArrayList<Record> searchResult = new ArrayList<>();
+        searchResult.add(result);
+        deleteRecordFromAllBPTree(searchResult);
+        return true;
+    }
+    public Boolean deleteByField(String colName , String value){
+        // at first search this value in BPTree's
+        ArrayList<Record> searchResult = this.searchByColName(colName , value , value );
+        // then delete all records from all BPTree's
+        deleteRecordFromAllBPTree(searchResult);
+        return true;
+    }
+    private Boolean deleteRecordFromAllBPTree(ArrayList<Record> resultedRecord ) {
+        /*
+        we should delete each record from all BPTree
+        we need key value for delete func input so find this first
+         */
+        for (Record record : resultedRecord ) {
+            // update index of record in table and update the next cell (index)
+            for(int i = record.getIndexInTable() ; i < records.size() ; i++){
+                records.get(i).setIndexInTable(records.get(i).getIndexInTable() - 1);
+                records.get(i).getColumns().get(0).setValue((Integer)records.get(i).getColumns().get(0).getValue() - 1);
+            }
+            // update row index
+            rowIndex -- ;
+            // remove from records arraylist
+            records.remove(record);
+
+            Set<String> colNames = mapBPTrees.keySet();
+            Object value = null;
+            for(int i = 0 ; i < mapBPTrees.size() ; i++){
+                String colName = colNames.toArray()[i].toString();
+                for(Cell cell : record.getColumns()) {
+                    if(Objects.equals(cell.getColumnName(), colName)){
+                        value = cell.getValue();
+                        break;
+                    }
+                }
+                /* for index BPTree , at first we need to create new BPTree with new index
+                & remove previous BPTree of indexes
+                 (cuz all key after this record had been changed when indexes was updated)
+                 */
+                if(Objects.equals(colName, "Index")){
+                    mapBPTrees.remove(colName);
+                    createNewIndexBPTree();
+                }
+                // in other case just delete the value from BPTree
+                else {
+                    mapBPTrees.get(colName).delete(value);
+                }
+            }
+
+        }
+        return true;
+    }
+    private void createNewIndexBPTree(){
+        BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
+            @Override
+            public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
+                if (o1 == null && o2 == null) { return 0; }
+                if (o1 == null) { return 1; }
+                if (o2 == null) { return -1; }
+                return o1.getKey().compareTo(o2.getKey());
+            }
+        });
+        this.mapBPTrees.put("Index", bpTreeByIndex);
+        // for insert all existed records in new BPTree
+        for (int i = 1; i < records.size(); i++) {
+            for (Cell cell : records.get(i).getColumns()) {
+                if (Objects.equals(cell.getColumnName(), "Index"))
+                    bpTreeByIndex.insert((Integer) cell.getValue(), records.get(i));
+            }
+        }
+    }
 }

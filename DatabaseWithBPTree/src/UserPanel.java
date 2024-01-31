@@ -46,7 +46,8 @@ public class UserPanel {
 
                 // select existed table
                 case 2 -> {
-
+                    findSelectedTable();
+                    tableMenuManager();
                 }
 
                 case 3 -> {
@@ -89,17 +90,15 @@ public class UserPanel {
 
                 // delete by index of row
                 case 5 -> {
-                    // code
-
+                    this.deleteByIndex();
+                    menu.printTableMenu();
                 }
 
                 // delete by other fields
                 case 6 -> {
-                    // code
-
+                    this.deleteByOtherField();
+                    menu.printTableMenu();
                 }
-
-                // delete by other fields
                 case 7 -> {
                     this.mainMenu();
                 }
@@ -228,6 +227,9 @@ public class UserPanel {
 
     //------------------------------------------------------------------------------------------------------------------
 
+    /*
+    This method uses in searching by index
+     */
     private void searchByIndex() {
         System.out.println("> Enter the index ...");
         int index = sc.nextInt();
@@ -235,6 +237,9 @@ public class UserPanel {
         System.out.println(record.toString());
     }
 
+    /*
+    This method uses in searching by specific key
+     */
     private void searchBySpecificKey() {
         System.out.println("> Which field do you wanna search in?");
         System.out.println("Fields : " + this.printAllColName());
@@ -253,6 +258,9 @@ public class UserPanel {
         return sb.toString();
     }
 
+    /*
+    This method uses in searching with input range
+     */
     private void searchWithInputRange() {
         System.out.println("> Which field do you wanna search in?");
         System.out.println("Fields : " + this.printAllColName());
@@ -272,4 +280,37 @@ public class UserPanel {
         }
         return sb.toString();
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public void deleteByIndex(){
+        System.out.println("> Enter the Index of row you wanna delete...");
+        int index = sc.nextInt();
+        if(currentTable.deleteByIndex(index))
+            System.out.println("Deleting operation has been done successfully !");
+    }
+
+    public void deleteByOtherField(){
+        System.out.println("> Which field do you wanna deleted by?");
+        System.out.println("Fields : " + this.printAllColName());
+        String colName = sc.next();
+        System.out.println("> Enter the value...");
+        String value = sc.next();
+        if(currentTable.deleteByField(colName , value ) )
+            System.out.println("Deleting operation has been done successfully !");
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    /*
+    This method uses for finding the table which user want
+     */
+    public void findSelectedTable(){
+        System.out.println("> Enter the name of table you wanna select...");
+        String tableTitle = sc.nextLine();
+        for(Table table : tables){
+            if(Objects.equals(table.getTableTitle(), tableTitle))
+                currentTable = table;
+        }
+    }
+
 }
