@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import model.Record;
+import exception.EmptyTree;
+import exception.NonExistentKey;
+import database.model.Record;
 
 public class BPTree<E> {
 
@@ -336,7 +338,7 @@ public class BPTree<E> {
         } else if (in.getRightSibling() != null && in.getRightSibling().isLendable()) {
             sibling = in.getRightSibling();
 
-            // Copy 1 key and pointer from sibling (atm just 1 key)
+            // Copy 1 key and pointer from sibling
             E borrowedKey = sibling.getKeys()[0];
             Node<E> pointer = sibling.getChildPointers()[0];
 
@@ -356,12 +358,14 @@ public class BPTree<E> {
 
         // Merge:
         else if (in.getLeftSibling() != null && in.getLeftSibling().isMergeable()) {
-
+            sibling = in.getLeftSibling();
         } else if (in.getRightSibling() != null && in.getRightSibling().isMergeable()) {
             sibling = in.getRightSibling();
 
-            // Copy rightmost key in parent to beginning of sibling's keys &
-            // delete key from parent
+            /*
+             Copy rightmost key in parent to beginning of sibling's keys & delete key from parent
+             */
+
             sibling.getKeys()[sibling.getDegree() - 1] = parent.getKeys()[parent.getDegree() - 2];
             Arrays.sort(sibling.getKeys(), 0, sibling.getDegree());
             parent.getKeys()[parent.getDegree() - 2] = null;
@@ -369,7 +373,7 @@ public class BPTree<E> {
             // Copy in's child pointer over to sibling's list of child pointers
             for (int i = 0; i < in.getChildPointers().length; i++) {
                 if (in.getChildPointers()[i] != null) {
-                    sibling.insertChildPointer(in.getChildPointers()[i], 0);//????insertChildPointer(pointer,index)
+                    sibling.insertChildPointer(in.getChildPointers()[i], 0);
                     in.getChildPointers()[i].setParent(sibling);
                     in.removePointer(i);
                 }
@@ -411,7 +415,7 @@ public class BPTree<E> {
             /* create leaf node as first node in B plus tree
               & set as first leaf node (can be used later for in-order leaf traversal)
              */
-            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value) , this.EComparator ,this.dictionaryPairComparator );
+            this.firstLeaf = new LeafNode<E>(this.max, new DictionaryPair<E>(key, value), this.EComparator, this.dictionaryPairComparator);
         }
 
         // root is not null
@@ -555,18 +559,18 @@ public class BPTree<E> {
        Given a key, this method will remove the dictionary pair with the
        corresponding key from the B+ tree.
      */
-    public void delete(E key) {
-        if (isEmpty()) {//??????????exception
+    public void delete(E key) throws EmptyTree, NonExistentKey {
+        if (isEmpty()) {
             /* flow of execution goes here when B+ tree has no dictionary pairs */
-            System.err.println("Invalid Delete: The B+ tree is currently empty.");
+            throw new EmptyTree();
         } else {
             // get leaf node and attempt to find index of key to delete
             LeafNode<E> leafNode = (this.root == null) ? this.firstLeaf : findLeafNode(key);
             int dpIndex = binarySearch(leafNode.getDictionary(), leafNode.getNumPairs(), key);
 
-            if (dpIndex < 0) {//??????????exception
-                /* Flow of execution goes here when key is absent in B+ tree */
-                System.err.println("Invalid Delete: Key unable to be found.");
+            if (dpIndex < 0) {
+                /* flow of execution goes here when key is not existed in B+ tree */
+                throw new NonExistentKey();
             }
             // successfully delete the dictionary pair
             else {

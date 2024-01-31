@@ -1,6 +1,6 @@
 package dataStructure;
 
-import model.Record;
+import database.model.Record;
 
 public class DictionaryPair<E> {
     // -------------- field ----------------

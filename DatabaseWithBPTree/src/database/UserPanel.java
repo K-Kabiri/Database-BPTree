@@ -1,7 +1,11 @@
-import model.Cell;
-import model.DataType;
-import model.Record;
-import model.Table;
+package database;
+
+import database.Menu;
+import exception.*;
+import database.model.Cell;
+import database.model.DataType;
+import database.model.Record;
+import database.model.Table;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -100,6 +104,7 @@ public class UserPanel {
                     menu.printTableMenu();
                 }
                 case 7 -> {
+                    currentTable=null;
                     this.mainMenu();
                 }
                 default -> {
@@ -124,6 +129,7 @@ public class UserPanel {
         if (Objects.equals(hasKey, "YES")) {
             System.out.println("> Enter the type key which you want...");
             String keyType = sc.next();
+            keyType=keyType.toUpperCase();
             createNewTableWithSelectedKey(keyType, tableTitle, numCol, Boolean.TRUE);
         } else if (Objects.equals(hasKey, "NO")) {
             System.out.println("Ok! table with Integer index has been created for you...");
@@ -154,7 +160,7 @@ public class UserPanel {
 
     private void createFirstRow(Record firstRow, String keyType, int numCol) {
         ArrayList<Cell> cells = new ArrayList<>();
-        cells.add(new Cell<>(DataType.Integer, 0, "Index"));
+        cells.add(new Cell<>(DataType.INTEGER, 0, "Index"));
 
         // if the table has specific key, give it from user
         if (currentTable.isHasSpecificKey()) {
@@ -165,6 +171,7 @@ public class UserPanel {
             for (int i = 0; i < numCol - 1; i++) {
                 System.out.println("> Enter DataType and Name of column...");
                 String dataType = sc.next();
+                dataType=dataType.toUpperCase();
                 String colName = sc.next();
                 cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
             }
@@ -178,6 +185,7 @@ public class UserPanel {
             for (int i = 0; i < numCol; i++) {
                 System.out.println("> Enter DataType and Name of column...");
                 String dataType = sc.next();
+                dataType=dataType.toUpperCase();
                 String colName = sc.next();
                 cells.add(new Cell<>(DataType.valueOf(dataType), null, colName));
             }
@@ -194,27 +202,27 @@ public class UserPanel {
 
     private void insertNewRecord() {
         ArrayList<Cell> cells = new ArrayList<>();
-        cells.add(new Cell<>(DataType.Integer, currentTable.getRowIndex(), "Index"));
+        cells.add(new Cell<>(DataType.INTEGER, currentTable.getRowIndex(), "INTEGER"));
         for (int i = 1; i < currentTable.getNumberOfColumn(); i++) {
             Cell firstRow = currentTable.getRecords().get(0).getColumns().get(i);
 
-            if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Integer"))) {
+            if (Objects.equals(firstRow.getDataType(), DataType.valueOf("INTEGER"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.nextInt(), firstRow.getColumnName()));
 
-            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Character"))) {
+            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("CHARACTER"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
 
-            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Double"))) {
+            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("DOUBLE"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.nextDouble(), firstRow.getColumnName()));
 
-            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Boolean"))) {
+            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("BOOLEAN"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), Boolean.valueOf(sc.next()), firstRow.getColumnName()));
 
-            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("String"))) {
+            } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("STRING"))) {
                 System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
             }
@@ -233,8 +241,17 @@ public class UserPanel {
     private void searchByIndex() {
         System.out.println("> Enter the index ...");
         int index = sc.nextInt();
-        Record record = currentTable.searchByIndex(index);
-        System.out.println(record.toString());
+        if (index<currentTable.getRowIndex()) {
+            Record record = currentTable.searchByIndex(index);
+            System.out.println(record.toString());
+        }
+        else {
+            try {
+                throw new InvalidIndex();
+            } catch (InvalidIndex e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /*
@@ -286,8 +303,16 @@ public class UserPanel {
     public void deleteByIndex(){
         System.out.println("> Enter the Index of row you wanna delete...");
         int index = sc.nextInt();
-        if(currentTable.deleteByIndex(index))
-            System.out.println("Deleting operation has been done successfully !");
+        try {
+            try {
+                if(currentTable.deleteByIndex(index))
+                    System.out.println("Deleting operation has been done successfully !");
+            } catch (NonExistentKey e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } catch (EmptyTree e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void deleteByOtherField(){
@@ -296,8 +321,16 @@ public class UserPanel {
         String colName = sc.next();
         System.out.println("> Enter the value...");
         String value = sc.next();
-        if(currentTable.deleteByField(colName , value ) )
-            System.out.println("Deleting operation has been done successfully !");
+        try {
+            try {
+                if(currentTable.deleteByField(colName , value ) )
+                    System.out.println("Deleting operation has been done successfully!");
+            } catch (NonExistentKey e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (EmptyTree e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -310,6 +343,13 @@ public class UserPanel {
         for(Table table : tables){
             if(Objects.equals(table.getTableTitle(), tableTitle))
                 currentTable = table;
+        }
+        if (currentTable==null){
+            try {
+                throw new InvalidTableName();
+            } catch (InvalidTableName e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 

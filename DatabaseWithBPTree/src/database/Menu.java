@@ -1,3 +1,5 @@
+package database;
+
 public class Menu {
     public void printMainMenu(){
         System.out.println("""

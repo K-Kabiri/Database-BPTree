@@ -1,7 +1,9 @@
-package model;
+package database.model;
 
 import dataStructure.BPTree;
 import dataStructure.DictionaryPair;
+import exception.EmptyTree;
+import exception.NonExistentKey;
 
 import java.util.*;
 
@@ -118,7 +120,7 @@ public class Table {
     and hold it in BPTrees map
      */
     public void creatBPTreeWithKey() {
-        if (keyDataType == DataType.Integer) {
+        if (keyDataType == DataType.INTEGER) {
             BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
                 @Override
                 public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
@@ -129,7 +131,7 @@ public class Table {
                 }
             });
             this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
-        } else if (keyDataType == DataType.Double) {
+        } else if (keyDataType == DataType.DOUBLE) {
 
             BPTree<Double> bpTreeByIndex = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
                 @Override
@@ -141,7 +143,7 @@ public class Table {
                 }
             });
             this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
-        } else if (keyDataType == DataType.Character) {
+        } else if (keyDataType == DataType.CHARACTER) {
 
             BPTree<Character> bpTreeByIndex = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
                 @Override
@@ -153,7 +155,7 @@ public class Table {
                 }
             });
             this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
-        } else if (keyDataType == DataType.Boolean) {
+        } else if (keyDataType == DataType.BOOLEAN) {
 
             BPTree<Boolean> bpTreeByIndex = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
                 @Override
@@ -165,7 +167,7 @@ public class Table {
                 }
             });
             this.mapBPTrees.put(keyColumnName, bpTreeByIndex);
-        } else if (keyDataType == DataType.String) {
+        } else if (keyDataType == DataType.STRING) {
             BPTree<String> bpTreeByIndex = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
                 @Override
                 public int compare(DictionaryPair<String> o1, DictionaryPair<String> o2) {
@@ -200,7 +202,7 @@ public class Table {
     and put it in BPTrees map
      */
     public void creatNewBPTree(String colName, DataType dataType) {
-        if (dataType == DataType.Integer) {
+        if (dataType == DataType.INTEGER) {
             BPTree<Integer> bpTree = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
                 @Override
                 public int compare(DictionaryPair<Integer> o1, DictionaryPair<Integer> o2) {
@@ -219,7 +221,7 @@ public class Table {
                 }
             }
 
-        } else if (dataType == DataType.Double) {
+        } else if (dataType == DataType.DOUBLE) {
 
             BPTree<Double> bpTree = new BPTree<>(5, null, null, Double::compareTo, new Comparator<DictionaryPair<Double>>() {
                 @Override
@@ -239,7 +241,7 @@ public class Table {
                 }
             }
 
-        } else if (dataType == DataType.Character) {
+        } else if (dataType == DataType.CHARACTER) {
 
             BPTree<Character> bpTree = new BPTree<>(5, null, null, Character::compareTo, new Comparator<DictionaryPair<Character>>() {
                 @Override
@@ -259,7 +261,7 @@ public class Table {
                 }
             }
 
-        } else if (dataType == DataType.Boolean) {
+        } else if (dataType == DataType.BOOLEAN) {
 
             BPTree<Boolean> bpTree = new BPTree<>(5, null, null, Boolean::compareTo, new Comparator<DictionaryPair<Boolean>>() {
                 @Override
@@ -279,7 +281,7 @@ public class Table {
                 }
             }
 
-        } else if (dataType == DataType.String) {
+        } else if (dataType == DataType.STRING) {
             BPTree<String> bpTree = new BPTree<>(5, null, null, String::compareTo, new Comparator<DictionaryPair<String>>() {
                 @Override
                 public int compare(DictionaryPair<String> o1, DictionaryPair<String> o2) {
@@ -321,19 +323,19 @@ public class Table {
          */
         DataType colDataType = this.findDataTypeOfCol(colName);
         if (mapBPTrees.containsKey(colName)) {
-            if (colDataType == DataType.Integer) {
+            if (colDataType == DataType.INTEGER) {
                 return mapBPTrees.get(colName).search(Integer.valueOf(lowerBound), Integer.valueOf(upperBound));
             }
-            if (colDataType == DataType.Double) {
+            if (colDataType == DataType.DOUBLE) {
                 return mapBPTrees.get(colName).search(Double.valueOf(lowerBound), Double.valueOf(upperBound));
             }
-            if (colDataType == DataType.Character) {
+            if (colDataType == DataType.CHARACTER) {
                 return mapBPTrees.get(colName).search(lowerBound, upperBound);
             }
-            if (colDataType == DataType.String) {
+            if (colDataType == DataType.STRING) {
                 return mapBPTrees.get(colName).search(lowerBound, upperBound);
             }
-            if (colDataType == DataType.Boolean) {
+            if (colDataType == DataType.BOOLEAN) {
                 return mapBPTrees.get(colName).search(Boolean.valueOf(lowerBound), Boolean.valueOf(upperBound));
             }
         }
@@ -355,7 +357,7 @@ public class Table {
     }
 
     // --------------------- Delete --------------------------
-    public Boolean deleteByIndex(int index){
+    public Boolean deleteByIndex(int index) throws EmptyTree, NonExistentKey {
         // at first search this value by index
         Record result = this.searchByIndex(index);
         // then delete this record from all BPTree's
@@ -364,14 +366,14 @@ public class Table {
         deleteRecordFromAllBPTree(searchResult);
         return true;
     }
-    public Boolean deleteByField(String colName , String value){
+    public Boolean deleteByField(String colName , String value) throws EmptyTree, NonExistentKey {
         // at first search this value in BPTree's
         ArrayList<Record> searchResult = this.searchByColName(colName , value , value );
         // then delete all records from all BPTree's
         deleteRecordFromAllBPTree(searchResult);
         return true;
     }
-    private Boolean deleteRecordFromAllBPTree(ArrayList<Record> resultedRecord ) {
+    private Boolean deleteRecordFromAllBPTree(ArrayList<Record> resultedRecord ) throws EmptyTree, NonExistentKey {
         /*
         we should delete each record from all BPTree
         we need key value for delete func input so find this first
