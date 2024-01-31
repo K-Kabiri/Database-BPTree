@@ -96,6 +96,10 @@ public class Table {
     // ----------------------- METHODS --------------------------
 
     // ------------------------ Insert ---------------------------
+    /*
+       This method create a B+ tree with Index column as a key column
+       and hold it in BPTrees map
+     */
     private void createBPTreeWithIndex() {
         BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
             @Override
@@ -106,6 +110,10 @@ public class Table {
         this.mapBPTrees.put("Index", bpTreeByIndex);
     }
 
+    /*
+           This method create a B+ tree with input key as a key column
+           and hold it in BPTrees map
+         */
     public void creatBPTreeWithKey() {
         if (keyDataType == DataType.Integer) {
             BPTree<Integer> bpTreeByIndex = new BPTree<>(5, null, null, Integer::compareTo, new Comparator<DictionaryPair<Integer>>() {
@@ -153,6 +161,10 @@ public class Table {
         }
     }
 
+     /*
+       This method insert a new record as value and its column name as key to the BPTrees map.
+       also add this new record to the list of records.
+     */
 
     public void insertRecord(Record record) {
         this.rowIndex++;
@@ -174,10 +186,10 @@ public class Table {
             });
             this.mapBPTrees.put(colName, bpTree);
             // for insert all existed records in new BPTree
-            for (Record record : this.records) {
-                for (Cell cell : record.getColumns()) {
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
                     if (Objects.equals(cell.getColumnName(), colName))
-                        bpTree.insert((Integer) cell.getValue(), record);
+                        bpTree.insert((Integer) cell.getValue(), records.get(i));
                 }
             }
 
@@ -191,10 +203,10 @@ public class Table {
             });
             this.mapBPTrees.put(colName, bpTree);
             // for insert all existed records in new BPTree
-            for (Record record : this.records) {
-                for (Cell cell : record.getColumns()) {
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
                     if (Objects.equals(cell.getColumnName(), colName))
-                        bpTree.insert((Double) cell.getValue(), record);
+                        bpTree.insert((Double) cell.getValue(), records.get(i));
                 }
             }
 
@@ -208,10 +220,10 @@ public class Table {
             });
             this.mapBPTrees.put(colName, bpTree);
             // for insert all existed records in new BPTree
-            for (Record record : this.records) {
-                for (Cell cell : record.getColumns()) {
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
                     if (Objects.equals(cell.getColumnName(), colName))
-                        bpTree.insert((Character) cell.getValue(), record);
+                        bpTree.insert((Character) cell.getValue(), records.get(i));
                 }
             }
 
@@ -225,10 +237,10 @@ public class Table {
             });
             this.mapBPTrees.put(colName, bpTree);
             // for insert all existed records in new BPTree
-            for (Record record : this.records) {
-                for (Cell cell : record.getColumns()) {
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
                     if (Objects.equals(cell.getColumnName(), colName))
-                        bpTree.insert((Boolean) cell.getValue(), record);
+                        bpTree.insert((Boolean) cell.getValue(), records.get(i));
                 }
             }
 
@@ -241,10 +253,10 @@ public class Table {
             });
             this.mapBPTrees.put(colName, bpTree);
             // for insert all existed records in new BPTree
-            for (Record record : this.records) {
-                for (Cell cell : record.getColumns()) {
+            for (int i = 1; i < records.size(); i++) {
+                for (Cell cell : records.get(i).getColumns()) {
                     if (Objects.equals(cell.getColumnName(), colName))
-                        bpTree.insert((String) cell.getValue(), record);
+                        bpTree.insert((String) cell.getValue(), records.get(i));
                 }
             }
         }

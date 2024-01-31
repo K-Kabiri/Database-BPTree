@@ -9,7 +9,7 @@ public class InternalNode<E> extends Node<E> {
     private InternalNode<E> rightSibling;
     private E[] keys;
     private Node<E>[] childPointers;
-    BPTree<E> bpTree=new BPTree<>();
+    BPTree<E> bpTree = new BPTree<>();
 
     // ------------ constructor --------------
 

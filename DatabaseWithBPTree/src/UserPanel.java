@@ -30,9 +30,9 @@ public class UserPanel {
     }
 
     // ---------------- Methods ----------------
-    public void mainMenu(){
+    public void mainMenu() {
         int command;
-        do {
+        while (true) {
             menu.printMainMenu();
             command = sc.nextInt();
 
@@ -48,15 +48,19 @@ public class UserPanel {
                 case 2 -> {
 
                 }
+
+                case 3 -> {
+                    System.exit(0);
+                }
             }
-        } while (command == 3);
+        }
     }
 
     public void tableMenuManager() {
         menu.printTableMenu();
         int command;
 
-        while(true){
+        while (true) {
             command = sc.nextInt();
             switch (command) {
                 // insert new record
@@ -107,6 +111,9 @@ public class UserPanel {
     }
 
     //------------------------------------------------------------------------------------------------------------------
+     /*
+       This method receive necessary information for creating a new table
+     */
     public void createTableManager() {
         System.out.println("> Enter the title of your new table...");
         String tableTitle = sc.next();
@@ -114,11 +121,12 @@ public class UserPanel {
         int numCol = sc.nextInt();
         System.out.println("> Do you wanna create a new table with specific key type ? ( Yes or No )");
         String hasKey = sc.next();
-        if (Objects.equals(hasKey, "Yes")) {
+        hasKey = hasKey.toUpperCase();
+        if (Objects.equals(hasKey, "YES")) {
             System.out.println("> Enter the type key which you want...");
             String keyType = sc.next();
             createNewTableWithSelectedKey(keyType, tableTitle, numCol, Boolean.TRUE);
-        } else if (Objects.equals(hasKey, "No")) {
+        } else if (Objects.equals(hasKey, "NO")) {
             System.out.println("Ok! table with Integer index has been created for you...");
             createNewTableWithSelectedKey("Integer", tableTitle, numCol, Boolean.FALSE);
         }
@@ -138,6 +146,12 @@ public class UserPanel {
         tables.add(currentTable);
 
     }
+
+     /*
+        This method create first row(name of columns)
+        if it has specific key we receive information of key column and then add other columns of the table
+        otherwise we only add columns and consider 'index' column as key column.
+     */
 
     private void createFirstRow(Record firstRow, String keyType, int numCol) {
         ArrayList<Cell> cells = new ArrayList<>();
@@ -186,23 +200,23 @@ public class UserPanel {
             Cell firstRow = currentTable.getRecords().get(0).getColumns().get(i);
 
             if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Integer"))) {
-                System.out.println("> Enter the value...");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.nextInt(), firstRow.getColumnName()));
 
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Character"))) {
-                System.out.println("> Enter the value...");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
 
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Double"))) {
-                System.out.println("> Enter the value...");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.nextDouble(), firstRow.getColumnName()));
 
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("Boolean"))) {
-                System.out.println("> Enter the value...");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), Boolean.valueOf(sc.next()), firstRow.getColumnName()));
 
             } else if (Objects.equals(firstRow.getDataType(), DataType.valueOf("String"))) {
-                System.out.println("> Enter the value...");
+                System.out.println("> Enter the value of " + firstRow.getColumnName() + " ...");
                 cells.add(new Cell<>(firstRow.getDataType(), sc.next(), firstRow.getColumnName()));
             }
         }
@@ -250,9 +264,10 @@ public class UserPanel {
         ArrayList<Record> record = currentTable.searchByColName(colName, lowerBound, upperBound);
         System.out.println(printRecordArrayList(record));
     }
-    private String printRecordArrayList(ArrayList<Record> records){
+
+    private String printRecordArrayList(ArrayList<Record> records) {
         StringBuilder sb = new StringBuilder();
-        for(Record record : records){
+        for (Record record : records) {
             sb.append(record.toString()).append("\n");
         }
         return sb.toString();

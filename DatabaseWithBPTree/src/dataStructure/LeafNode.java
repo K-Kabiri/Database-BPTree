@@ -18,12 +18,12 @@ public class LeafNode<E> extends Node<E> {
 
     // ------------ constructor --------------
 
-    public LeafNode(int m, DictionaryPair<E> dp , Comparator<E> Ecomparator , Comparator<DictionaryPair<E>> comparator) {
+    public LeafNode(int m, DictionaryPair<E> dp, Comparator<E> EComparator, Comparator<DictionaryPair<E>> comparator) {
         this.maxNumPairs = m - 1;
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
         this.dictionary = new DictionaryPair[m];
         this.numPairs = 0;
-        this.EComparator = Ecomparator;
+        this.EComparator = EComparator;
         this.dictionaryPairComparator = comparator;
         this.insert(dp);
     }
@@ -35,6 +35,7 @@ public class LeafNode<E> extends Node<E> {
     protected int compare(DictionaryPair<E> d1, DictionaryPair<E> d2) {
         return EComparator.compare(d1.getKey(), d2.getKey());
     }
+
     public LeafNode(int m, DictionaryPair<E>[] dps, InternalNode<E> parent) {
         this.maxNumPairs = m - 1;
         this.minNumPairs = (int) (Math.ceil(m / 2.0) - 1);
@@ -114,7 +115,7 @@ public class LeafNode<E> extends Node<E> {
         } else {
             this.dictionary[numPairs] = dp;
             numPairs++;
-            Arrays.sort(this.dictionary, 0, numPairs , dictionaryPairComparator);
+            Arrays.sort(this.dictionary, 0, numPairs, dictionaryPairComparator);
             return true;
         }
     }

@@ -7,7 +7,7 @@ public class Record {
     private ArrayList<Cell> columns;
 
     public Record(int indexInTable) {
-        this.indexInTable=indexInTable;
+        this.indexInTable = indexInTable;
         this.columns = new ArrayList<>();
     }
 
@@ -32,7 +32,7 @@ public class Record {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Cell cell : this.columns){
+        for (Cell cell : this.columns) {
             sb.append(cell.getValue());
             sb.append("   ");
         }
